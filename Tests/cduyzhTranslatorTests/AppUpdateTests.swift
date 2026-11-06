@@ -30,7 +30,7 @@ final class AppUpdateTests: XCTestCase {
         XCTAssertEqual(v2?.patch, 4)
         XCTAssertEqual(v2?.prerelease, "alpha.1")
         XCTAssertEqual(v2?.buildNumber, 42)
-        XCTAssertEqual(v2?.fullDisplayString, "v2.3.4-alpha.1 (Build 42)")
+        XCTAssertEqual(v2?.fullDisplayString, "v2.3.4-alpha.1")
     }
 
     func testVersionComparison() {
@@ -77,7 +77,7 @@ final class AppUpdateTests: XCTestCase {
 
         // 验证 Markdown 与 JSON 导出
         let markdown = manager.exportFullChangelogMarkdown()
-        XCTAssertTrue(markdown.contains("译栏 TransBar 更新日志与发布历史"))
+        XCTAssertTrue(markdown.contains("极译 AI (iTrans) 更新日志与发布历史"))
         XCTAssertTrue(markdown.contains("1.0.0"))
 
         let json = manager.exportAsJSON()

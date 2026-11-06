@@ -128,12 +128,21 @@ public enum StatusPanelAction: Hashable, Sendable {
     case agentGateway
     case more
     case quit
+
+    // 二级更多操作面板专属动作
+    case toggleAutoStart
+    case clearCache
+    case reloadHotkeys
+    case restartApp
+    case checkUpdates
+    case releaseNotes
 }
 
 /// 状态栏悬浮控制面板的数据响应模型
 public final class StatusPanelModel: ObservableObject {
     @Published public var snapshot: StatusPanelSnapshot = StatusPanelSnapshot()
     @Published public var focusedAction: StatusPanelAction? = nil
+    @Published public var isMoreExpanded: Bool = false
 
     public init() {}
 }
@@ -150,47 +159,71 @@ public struct StatusPanelContent: View {
     public var body: some View {
         StatusPanelView(
             snapshot: model.snapshot,
+            isMoreExpanded: model.isMoreExpanded,
             focusedAction: model.focusedAction,
             onAction: onAction,
-            onFocusChange: { model.focusedAction = $0 }
+            onFocusChange: { model.focusedAction = $0 },
+            onToggleMore: {
+                withAnimation(.spring(response: 0.24, dampingFraction: 0.86)) {
+                    model.isMoreExpanded.toggle()
+                }
+            }
         )
     }
 }
 
-/// 状态栏右键悬浮面板：严格遵循 cduyzh-mac-app-design (v2026-10-28.2) 五大黄金功能分区架构与双行解耦头栏标准。
+/// 状态栏右键悬浮面板：严格遵循 cduyzh-mac-app-design (v2026-10-30) 四大黄金功能分区架构与 Quiet Signal 双行解耦头栏标准。
+/// 彻底移除常驻权限与服务状态巡检栏（统一收敛至设置中心），全面重构二级“更多”内嵌毛玻璃卡片面板，告别系统粗糙菜单。
 public struct StatusPanelView: View {
     public let snapshot: StatusPanelSnapshot
+    public var isMoreExpanded: Bool = false
     public var focusedAction: StatusPanelAction? = nil
     public var onAction: (StatusPanelAction) -> Void = { _ in }
     public var onFocusChange: (StatusPanelAction?) -> Void = { _ in }
+    public var onToggleMore: () -> Void = {}
     @FocusState private var nativeFocus: StatusPanelAction?
 
     private let secondary = Color(nsColor: .secondaryLabelColor)
 
     public init(
         snapshot: StatusPanelSnapshot,
+        isMoreExpanded: Bool = false,
         focusedAction: StatusPanelAction? = nil,
         onAction: @escaping (StatusPanelAction) -> Void = { _ in },
-        onFocusChange: @escaping (StatusPanelAction?) -> Void = { _ in }
+        onFocusChange: @escaping (StatusPanelAction?) -> Void = { _ in },
+        onToggleMore: @escaping () -> Void = {}
     ) {
         self.snapshot = snapshot
+        self.isMoreExpanded = isMoreExpanded
         self.focusedAction = focusedAction
         self.onAction = onAction
         self.onFocusChange = onFocusChange
+        self.onToggleMore = onToggleMore
     }
 
     public var body: some View {
         VStack(spacing: 0) {
             header
-                .padding(.bottom, 14)
+                .padding(.bottom, 12)
 
-            primaryActionCards
+            if isMoreExpanded {
+                moreActionsView
+                    .transition(.asymmetric(
+                        insertion: .opacity.combined(with: .scale(scale: 0.98)),
+                        removal: .opacity
+                    ))
+            } else {
+                VStack(spacing: 0) {
+                    primaryActionCards
 
-            secondaryActionGrid
-                .padding(.top, 10)
-
-            permissionInspector
-                .padding(.top, 14)
+                    secondaryActionGrid
+                        .padding(.top, 10)
+                }
+                .transition(.asymmetric(
+                    insertion: .opacity.combined(with: .scale(scale: 0.98)),
+                    removal: .opacity
+                ))
+            }
 
             Divider()
                 .padding(.top, 12)
@@ -242,11 +275,11 @@ public struct StatusPanelView: View {
             VStack(alignment: .leading, spacing: 4) {
                 // Row 1: 英文产品名 + 中文副标题 + 弹性间距 + 微光胶囊徽标
                 HStack(alignment: .center, spacing: 6) {
-                    Text("TransBar")
+                    Text("iTrans")
                         .font(.system(size: 15, weight: .bold))
                         .lineLimit(1)
 
-                    Text("译栏")
+                    Text("极译 AI")
                         .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
@@ -360,59 +393,121 @@ public struct StatusPanelView: View {
         }
     }
 
-    // MARK: - Zone 4: 权限与系统健康巡检栏 (Permission Inspector)
-    private var permissionInspector: some View {
-        VStack(spacing: 6) {
-            HStack {
-                Text("权限与服务状态")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(secondary)
+    // MARK: - Zone 4: 二级“更多”原生内嵌维护面板 (Secondary Action Sheet)
+    // 彻底告别粗糙系统 NSMenu，纯原生 SwiftUI 毛玻璃卡片体系
+    private var moreActionsView: some View {
+        VStack(spacing: 8) {
+            // 顶部导航栏：模块标题与收起返回按钮
+            HStack(spacing: 6) {
+                Image(systemName: "slider.horizontal.3")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(Color.accentColor)
+
+                Text("偏好设置与系统维护")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(Color.primary)
+
                 Spacer()
-                Text("点击前往配置")
-                    .font(.system(size: 10))
-                    .foregroundStyle(.tertiary)
-            }
 
+                Button {
+                    onToggleMore()
+                } label: {
+                    HStack(spacing: 3) {
+                        Text("返回")
+                        Image(systemName: "chevron.up")
+                    }
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2.5)
+                    .background(Color.primary.opacity(0.04), in: RoundedRectangle(cornerRadius: 6, style: .continuous))
+                }
+                .buttonStyle(.plain)
+                .help("收起并返回快捷面板 (Esc)")
+            }
+            .padding(.horizontal, 2)
+
+            // 分组 1：系统与启动偏好
             VStack(spacing: 1) {
-                statusInspectionRow(
-                    .accessibilityPerm,
-                    title: "辅助功能权限",
-                    detail: "用于 Command+C+C 全局按键检测与划词",
-                    symbol: "hand.raised.fill",
-                    isGood: snapshot.isAccessibilityGranted,
-                    statusText: snapshot.isAccessibilityGranted ? "已授权" : "未授权 · 点击配置",
-                    showChevron: !snapshot.isAccessibilityGranted
+                moreToggleRow(
+                    .toggleAutoStart,
+                    title: "开机自动启动",
+                    detail: "登录系统时在后台静默运行",
+                    symbol: "power.circle.fill",
+                    color: Color.blue,
+                    isOn: snapshot.autoStartAtLogin
                 )
 
-                statusInspectionRow(
-                    .agentGateway,
-                    title: "本地 Agent 网关",
-                    detail: "端口 \(snapshot.agentGatewayPort) · 外部 Agent 联动",
-                    symbol: "network",
-                    isGood: snapshot.isAgentGatewayRunning,
-                    statusText: snapshot.isAgentGatewayRunning ? "已就绪" : "未启动",
-                    showChevron: true
+                moreActionRow(
+                    .reloadHotkeys,
+                    title: "重新加载全局快捷键",
+                    detail: "重新注册 ⌘C C 与全局监听",
+                    symbol: "keyboard.fill",
+                    color: Color.purple,
+                    badgeText: "重新载入"
+                )
+
+                moreActionRow(
+                    .restartApp,
+                    title: "重新启动极译 AI",
+                    detail: "重启主进程并恢复状态",
+                    symbol: "arrow.clockwise",
+                    color: Color.orange,
+                    badgeText: "立即重启"
                 )
             }
-            .padding(.horizontal, 7)
-            .padding(.vertical, 4)
-            .background(Color.primary.opacity(0.035), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+            .padding(4)
+            .background(Color(nsColor: .controlBackgroundColor).opacity(0.55), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+
+            // 分组 2：维护与更新
+            VStack(spacing: 1) {
+                moreActionRow(
+                    .clearCache,
+                    title: "清理翻译缓存",
+                    detail: "释放本地 SQLite 翻译历史缓存",
+                    symbol: "trash.fill",
+                    color: Color.red,
+                    badgeText: snapshot.cacheSizeFormatted,
+                    badgeHighlight: false
+                )
+
+                moreActionRow(
+                    .checkUpdates,
+                    title: snapshot.hasUnreadUpdate ? "发现新版本（可更新）" : "检查版本更新…",
+                    detail: "对比 GitHub Releases 正式发行版",
+                    symbol: "arrow.down.circle.fill",
+                    color: Color.cyan,
+                    badgeText: snapshot.hasUnreadUpdate ? "NEW" : "检查",
+                    badgeHighlight: snapshot.hasUnreadUpdate
+                )
+
+                moreActionRow(
+                    .releaseNotes,
+                    title: "版本更新记录…",
+                    detail: "查看最新特性与 CHANGELOG",
+                    symbol: "clock.arrow.circlepath",
+                    color: Color(red: 0.10, green: 0.65, blue: 0.40),
+                    badgeText: "v\(snapshot.version)"
+                )
+            }
+            .padding(4)
+            .background(Color(nsColor: .controlBackgroundColor).opacity(0.55), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
         }
     }
 
-    // MARK: - Zone 5: 底部全局工具栏与状态条 (Global Utility & Footer)
+    // MARK: - Zone 5 (四大分区体系中的 Zone 4): 底部全局工具栏与状态条 (Global Utility & Footer)
     private var footer: some View {
         HStack {
             Button {
-                onAction(.more)
+                onToggleMore()
             } label: {
                 HStack(spacing: 5) {
-                    Image(systemName: "ellipsis.circle")
-                    Text("更多")
-                    if snapshot.hasUnreadUpdate {
+                    Image(systemName: isMoreExpanded ? "chevron.up.circle.fill" : "ellipsis.circle")
+                    Text(isMoreExpanded ? "收起" : "更多")
+                    if !isMoreExpanded && snapshot.hasUnreadUpdate {
                         Circle().fill(Color.blue).frame(width: 5, height: 5)
                     }
-                    Image(systemName: "chevron.down").font(.system(size: 8, weight: .semibold))
+                    Image(systemName: isMoreExpanded ? "chevron.up" : "chevron.down").font(.system(size: 8, weight: .semibold))
                 }
                 .font(.system(size: 12))
                 .padding(.horizontal, 8)
@@ -421,8 +516,8 @@ public struct StatusPanelView: View {
             .buttonStyle(StatusControlStyle(isFocused: focusedAction == .more))
             .focused($nativeFocus, equals: .more)
             .focusEffectDisabled()
-            .help("更多操作：开机自启、检查更新、清理缓存与重启")
-            .accessibilityLabel("更多操作")
+            .help(isMoreExpanded ? "收起更多操作 (Esc)" : "更多操作：开机自启、检查更新、清理缓存与重启")
+            .accessibilityLabel(isMoreExpanded ? "收起更多操作" : "更多操作")
 
             Spacer()
 
@@ -443,8 +538,8 @@ public struct StatusPanelView: View {
             .buttonStyle(StatusControlStyle(isFocused: focusedAction == .quit, isDestructive: true))
             .focused($nativeFocus, equals: .quit)
             .focusEffectDisabled()
-            .help("退出译栏")
-            .accessibilityLabel("退出译栏")
+            .help("退出极译 AI (iTrans)")
+            .accessibilityLabel("退出极译 AI (iTrans)")
         }
     }
 
@@ -533,6 +628,131 @@ public struct StatusPanelView: View {
         .focusEffectDisabled()
         .help("\(title)（快捷键 \(shortcut)）")
         .accessibilityLabel("\(title)，\(hint)")
+    }
+
+    private func moreToggleRow(
+        _ action: StatusPanelAction,
+        title: String,
+        detail: String,
+        symbol: String,
+        color: Color,
+        isOn: Bool
+    ) -> some View {
+        Button {
+            onAction(action)
+        } label: {
+            HStack(spacing: 9) {
+                Image(systemName: symbol)
+                    .font(.system(size: 14))
+                    .foregroundStyle(color)
+                    .frame(width: 26, height: 26)
+                    .background(color.opacity(0.12), in: RoundedRectangle(cornerRadius: 7, style: .continuous))
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(Color.primary)
+                        .lineLimit(1)
+                    Text(detail)
+                        .font(.system(size: 9.5))
+                        .foregroundStyle(secondary)
+                        .lineLimit(1)
+                }
+
+                Spacer(minLength: 4)
+
+                HStack(spacing: 4) {
+                    Circle()
+                        .fill(isOn ? Color.accentColor : Color.secondary.opacity(0.4))
+                        .frame(width: 5, height: 5)
+                    Text(isOn ? "已开启" : "未开启")
+                        .font(.system(size: 10, weight: .medium))
+                        .foregroundStyle(isOn ? Color.accentColor : secondary)
+                }
+                .padding(.horizontal, 7)
+                .padding(.vertical, 3.5)
+                .background(
+                    isOn ? Color.accentColor.opacity(0.12) : Color.primary.opacity(0.04),
+                    in: Capsule()
+                )
+                .overlay(
+                    Capsule().strokeBorder(
+                        isOn ? Color.accentColor.opacity(0.3) : Color.primary.opacity(0.08),
+                        lineWidth: 0.6
+                    )
+                )
+            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 6)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(StatusControlStyle(isFocused: focusedAction == action))
+        .focused($nativeFocus, equals: action)
+        .focusEffectDisabled()
+        .accessibilityLabel("\(title)，\(isOn ? "已开启" : "未开启")")
+    }
+
+    private func moreActionRow(
+        _ action: StatusPanelAction,
+        title: String,
+        detail: String,
+        symbol: String,
+        color: Color,
+        badgeText: String,
+        badgeHighlight: Bool = false
+    ) -> some View {
+        Button {
+            onAction(action)
+        } label: {
+            HStack(spacing: 9) {
+                Image(systemName: symbol)
+                    .font(.system(size: 14))
+                    .foregroundStyle(color)
+                    .frame(width: 26, height: 26)
+                    .background(color.opacity(0.12), in: RoundedRectangle(cornerRadius: 7, style: .continuous))
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(Color.primary)
+                        .lineLimit(1)
+                    Text(detail)
+                        .font(.system(size: 9.5))
+                        .foregroundStyle(secondary)
+                        .lineLimit(1)
+                }
+
+                Spacer(minLength: 4)
+
+                Text(badgeText)
+                    .font(.system(size: 10, weight: .medium, design: .monospaced))
+                    .foregroundStyle(badgeHighlight ? Color.blue : secondary)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 3)
+                    .background(
+                        badgeHighlight ? Color.blue.opacity(0.12) : Color.primary.opacity(0.04),
+                        in: RoundedRectangle(cornerRadius: 5, style: .continuous)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5, style: .continuous)
+                            .strokeBorder(
+                                badgeHighlight ? Color.blue.opacity(0.3) : Color.primary.opacity(0.08),
+                                lineWidth: 0.6
+                            )
+                    )
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 8, weight: .semibold))
+                    .foregroundStyle(.tertiary)
+            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 6)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(StatusControlStyle(isFocused: focusedAction == action))
+        .focused($nativeFocus, equals: action)
+        .focusEffectDisabled()
+        .accessibilityLabel("\(title)，\(detail)，\(badgeText)")
     }
 
     private func statusInspectionRow(

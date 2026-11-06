@@ -756,7 +756,7 @@ with urllib.request.urlopen(req) as resp:
         "cta_desc_zh": "iTrans 完全基于宽松的 MIT 许可证在 GitHub 公开所有源代码。",
         "sections_en": """
     <section class="content-section">
-      <h2 class="section-heading">Choose Your Build (v1.0.1)</h2>
+      <h2 class="section-heading">Choose Your Build (v1.0.0)</h2>
       <div class="prose">
         <p>Pre-built release packages are hosted securely on GitHub Releases with zero third-party telemetry:</p>
       </div>
@@ -767,7 +767,7 @@ with urllib.request.urlopen(req) as resp:
           <div class="step-content" style="flex-grow: 1;">
             <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;">
               <h4 style="font-size: 17px; color: var(--accent);">Universal 2 Build (Recommended)</h4>
-              <span class="mono" style="font-size: 13px; color: var(--text-tertiary);">iTrans-1.0.1-universal.dmg</span>
+              <span class="mono" style="font-size: 13px; color: var(--text-tertiary);">iTrans-1.0.0-universal.dmg</span>
             </div>
             <p style="margin: 6px 0 12px;">Natively compiled for both Apple Silicon (M1/M2/M3/M4) and Intel x86_64 Macs. Zero Rosetta 2 overhead.</p>
             <a href="https://github.com/cduyzh/iTrans/releases" class="btn btn-primary" target="_blank" rel="noopener">
@@ -781,7 +781,7 @@ with urllib.request.urlopen(req) as resp:
           <div class="step-content" style="flex-grow: 1;">
             <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;">
               <h4>Apple Silicon Build</h4>
-              <span class="mono" style="font-size: 13px; color: var(--text-tertiary);">iTrans-1.0.1-arm64.dmg</span>
+              <span class="mono" style="font-size: 13px; color: var(--text-tertiary);">iTrans-1.0.0-arm64.dmg</span>
             </div>
             <p style="margin: 6px 0 12px;">Optimized specifically for Macs with M1, M2, M3, or M4 series chips for minimum download size.</p>
             <a href="https://github.com/cduyzh/iTrans/releases" class="btn btn-secondary" target="_blank" rel="noopener">
@@ -795,7 +795,7 @@ with urllib.request.urlopen(req) as resp:
           <div class="step-content" style="flex-grow: 1;">
             <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;">
               <h4>Intel Mac Build</h4>
-              <span class="mono" style="font-size: 13px; color: var(--text-tertiary);">iTrans-1.0.1-x86_64.dmg</span>
+              <span class="mono" style="font-size: 13px; color: var(--text-tertiary);">iTrans-1.0.0-x86_64.dmg</span>
             </div>
             <p style="margin: 6px 0 12px;">Native build for traditional Intel Core i5/i7/i9 processors.</p>
             <a href="https://github.com/cduyzh/iTrans/releases" class="btn btn-secondary" target="_blank" rel="noopener">
@@ -846,7 +846,7 @@ cd iTrans
 """,
         "sections_zh": """
     <section class="content-section">
-      <h2 class="section-heading">选择适合你 Mac 的安装包（v1.0.1）</h2>
+      <h2 class="section-heading">选择适合你 Mac 的安装包（v1.0.0）</h2>
       <div class="prose">
         <p>官方编译安装包托管在 GitHub Releases，经过严格的代码签名与敏感信息扫描，安全透明：</p>
       </div>
@@ -857,7 +857,7 @@ cd iTrans
           <div class="step-content" style="flex-grow: 1;">
             <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;">
               <h4 style="font-size: 17px; color: var(--accent);">Universal 2 通用安装包（推荐）</h4>
-              <span class="mono" style="font-size: 13px; color: var(--text-tertiary);">iTrans-1.0.1-universal.dmg</span>
+              <span class="mono" style="font-size: 13px; color: var(--text-tertiary);">iTrans-1.0.0-universal.dmg</span>
             </div>
             <p style="margin: 6px 0 12px;">同时包含 Apple Silicon 与 Intel 双架构二进制，无论是 M 系列芯片还是 Intel 处理器均享受原生运行，无 Rosetta 2 负担。</p>
             <a href="https://github.com/cduyzh/iTrans/releases" class="btn btn-primary" target="_blank" rel="noopener">
@@ -871,7 +871,7 @@ cd iTrans
           <div class="step-content" style="flex-grow: 1;">
             <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;">
               <h4>Apple Silicon 专版</h4>
-              <span class="mono" style="font-size: 13px; color: var(--text-tertiary);">iTrans-1.0.1-arm64.dmg</span>
+              <span class="mono" style="font-size: 13px; color: var(--text-tertiary);">iTrans-1.0.0-arm64.dmg</span>
             </div>
             <p style="margin: 6px 0 12px;">针对搭载 M1、M2、M3、M4 芯片的 Mac 精简体积，下载安装更小更快。</p>
             <a href="https://github.com/cduyzh/iTrans/releases" class="btn btn-secondary" target="_blank" rel="noopener">
@@ -885,7 +885,7 @@ cd iTrans
           <div class="step-content" style="flex-grow: 1;">
             <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;">
               <h4>Intel Mac 专版</h4>
-              <span class="mono" style="font-size: 13px; color: var(--text-tertiary);">iTrans-1.0.1-x86_64.dmg</span>
+              <span class="mono" style="font-size: 13px; color: var(--text-tertiary);">iTrans-1.0.0-x86_64.dmg</span>
             </div>
             <p style="margin: 6px 0 12px;">专为 Intel Core 处理器架构的 Mac 电脑优化打包。</p>
             <a href="https://github.com/cduyzh/iTrans/releases" class="btn btn-secondary" target="_blank" rel="noopener">

@@ -74,7 +74,7 @@
 ```bash
 # 1. 克隆代码仓库
 git clone https://github.com/cduyzh/iTrans.git
-cd TransBar
+cd iTrans
 
 # 2. 运行自动化测试套件验证环境
 ./scripts/run_tests.sh
@@ -113,7 +113,7 @@ open .build.noindex/iTrans.app
 
 ## 本地 Agent 网关接口
 
-在设置中启用网关后，TransBar 将在本地回环地址 `http://127.0.0.1:11899` 启动轻量级 HTTP 服务：
+在设置中启用网关后，iTrans 将在本地回环地址 `http://127.0.0.1:11899` 启动轻量级 HTTP 服务：
 
 | 请求方式 | 端点路径 | 功能描述 |
 | --- | --- | --- |
@@ -122,7 +122,7 @@ open .build.noindex/iTrans.app
 | `GET` | `/v1/knowledge-base` | 查看已加载的行业专有知识库与分类 |
 | `POST` | `/v1/knowledge-base/import`| 批量导入 JSON 或 CSV 行业专业术语库 |
 | `GET` | `/v1/stats` | 读取本地翻译调用统计与耗时分析 |
-| `GET` | `/v1/version` | 查询当前 TransBar 运行版本与构建号 |
+| `GET` | `/v1/version` | 查询当前 iTrans 运行版本与构建号 |
 | `GET` | `/v1/changelog` | 读取结构化版本更新历史日志 |
 
 ### cURL 示例：
@@ -142,7 +142,7 @@ curl -X POST http://127.0.0.1:11899/v1/translate \
 
 ## 隐私承诺与安全性
 
-- **零云端持久留存**：TransBar 不自建任何中间转发服务器，翻译文本仅直接发往用户明确选定的官方引擎（Google 或 DeepSeek）。
+- **零云端持久留存**：iTrans 不自建任何中间转发服务器，翻译文本仅直接发往用户明确选定的官方引擎（Google 或 DeepSeek）。
 - **密钥本地隔离**：DeepSeek API 密钥仅保存在用户本地磁盘（`0600` 权限），绝不上传、绝不入库，不请求钥匙串访问密码。
 - **无数据回传**：无埋点、无用户追踪分析 SDK、无任何隐蔽后台网络外联。
 
@@ -150,7 +150,7 @@ curl -X POST http://127.0.0.1:11899/v1/translate \
 
 ## 开源协议
 
-TransBar 遵循 [MIT 许可证](LICENSE) 开源发布。
+iTrans 遵循 [MIT 许可证](LICENSE) 开源发布。
 
 ## 作者
 

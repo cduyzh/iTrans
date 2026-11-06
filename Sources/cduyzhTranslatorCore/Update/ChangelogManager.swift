@@ -109,7 +109,7 @@ public final class ChangelogManager {
 
     /// 导出为完整 Markdown 文档
     public func exportFullChangelogMarkdown() -> String {
-        var doc = "# 译栏 TransBar 更新日志与发布历史\n\n"
+        var doc = "# 极译 AI (iTrans) 更新日志与发布历史\n\n"
         for release in releases {
             doc += release.markdownRepresentation + "\n---\n\n"
         }
@@ -149,7 +149,7 @@ public final class ChangelogManager {
                 version: "1.0.0",
                 buildNumber: 1,
                 releaseDate: "2026-10-29",
-                title: "译栏 TransBar 初始版本正式发布",
+                title: "极译 AI (iTrans) 初始版本正式发布",
                 summary: "极速极简的 macOS 原生状态栏划词翻译工具，深度集成 Google 与 DeepSeek 思考模型，支持本地自学习记忆库与全局热键。",
                 highlights: [
                     "极速极简的 macOS 原生状态栏划词翻译工具，深度集成 Google 与 DeepSeek 思考模型，支持本地自学习记忆库与全局热键。"

@@ -564,6 +564,12 @@ def generate_page(
         "description": "{meta_desc}",
         "url": "{page_url}",
         "inLanguage": "{lang}",
+        "isPartOf": {{
+          "@id": "{BASE_URL}/#website"
+        }},
+        "about": {{
+          "@id": "{BASE_URL}/#software"
+        }},
         "publisher": {{
           "@type": "Person",
           "name": "cduyzh",

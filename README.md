@@ -60,7 +60,7 @@ Download the latest release from [GitHub Releases](https://github.com/cduyzh/iTr
 3. Eject the DMG and launch iTrans from **Applications** or Spotlight.
 
 > **Note on Permissions**:
-> TransBar uses macOS Accessibility APIs for double `⌘C` selection translation. On first launch, open **System Settings → Privacy & Security → Accessibility** and enable `iTrans`. If you prefer not granting permissions, `Option+Z` or manual input works without any extra permissions.
+ > iTrans uses macOS Accessibility APIs for double `⌘C` selection translation. On first launch, open **System Settings → Privacy & Security → Accessibility** and enable `iTrans`. If you prefer not granting permissions, `Option+Z` or manual input works without any extra permissions.
 
 ---
 
@@ -113,7 +113,7 @@ open .build.noindex/iTrans.app
 
 ## Local Agent Gateway API
 
-When enabled in Settings, TransBar hosts a lightweight local HTTP server at `http://127.0.0.1:11899`:
+When enabled in Settings, iTrans hosts a lightweight local HTTP server at `http://127.0.0.1:11899`:
 
 | Method | Endpoint | Description |
 | --- | --- | --- |
@@ -142,7 +142,7 @@ curl -X POST http://127.0.0.1:11899/v1/translate \
 
 ## Privacy & Security Commitment
 
-- **Zero Cloud Data Retention**: Your text is never stored on external third-party servers operated by TransBar. Text is transmitted solely to the translation provider you select (Google or DeepSeek).
+- **Zero Cloud Data Retention**: Your text is never stored on external third-party servers operated by iTrans. Text is transmitted solely to the translation provider you select (Google or DeepSeek).
 - **Private Key Isolation**: DeepSeek API Keys are stored strictly on-disk with owner-only `0600` permissions (`~/Library/Application Support/cduyzhTranslator/deepseek-api-key`). We do not use the system Keychain to prevent intrusive system password prompts during binary updates.
 - **No Analytics / Telemetry**: No tracking SDKs, no behavioral analysis, no telemetry pings.
 
@@ -150,7 +150,7 @@ curl -X POST http://127.0.0.1:11899/v1/translate \
 
 ## License
 
-TransBar is open source software licensed under the [MIT License](LICENSE).
+iTrans is open source software licensed under the [MIT License](LICENSE).
 
 ## Author
 

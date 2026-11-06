@@ -11,7 +11,6 @@ public final class StatusPanelController: NSObject, NSPopoverDelegate {
     private let model = StatusPanelModel()
     private var refreshTimer: Timer?
     private var keyMonitor: Any?
-    private var moreMenu: NSMenu?
     private weak var currentStatusBarButton: NSStatusBarButton?
     private var previousActiveApp: NSRunningApplication?
 
@@ -53,6 +52,7 @@ public final class StatusPanelController: NSObject, NSPopoverDelegate {
         }
 
         refresh()
+        model.isMoreExpanded = false
         model.focusedAction = .quickTranslate
         popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
 
@@ -62,7 +62,6 @@ public final class StatusPanelController: NSObject, NSPopoverDelegate {
     }
 
     public func close() {
-        moreMenu?.cancelTracking()
         popover.performClose(nil)
         stopObserving()
     }
@@ -70,6 +69,7 @@ public final class StatusPanelController: NSObject, NSPopoverDelegate {
     public nonisolated func popoverDidClose(_ notification: Notification) {
         Task { @MainActor in
             self.stopObserving()
+            self.model.isMoreExpanded = false
             self.model.focusedAction = nil
             self.currentStatusBarButton = nil
         }
@@ -190,116 +190,47 @@ public final class StatusPanelController: NSObject, NSPopoverDelegate {
             AppDelegate.shared?.openSettings(tab: 6)
 
         case .more:
-            showMoreMenu()
+            withAnimation(.spring(response: 0.24, dampingFraction: 0.86)) {
+                model.isMoreExpanded.toggle()
+            }
+
+        case .toggleAutoStart:
+            if #available(macOS 13.0, *) {
+                let service = SMAppService.mainApp
+                if service.status == .enabled {
+                    try? service.unregister()
+                } else {
+                    try? service.register()
+                }
+            }
+            refresh()
+
+        case .clearCache:
+            AppDelegate.shared?.cleanupSpaceAction()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                self?.refresh()
+            }
+
+        case .reloadHotkeys:
+            AppDelegate.shared?.reloadHotkeyAction()
+            refresh()
+
+        case .restartApp:
+            close()
+            AppDelegate.shared?.restartAppAction()
+
+        case .checkUpdates:
+            close()
+            AppDelegate.shared?.openUpdateAction()
+
+        case .releaseNotes:
+            close()
+            AppDelegate.shared?.openSettings(tab: 7)
 
         case .quit:
             close()
             NSApp.terminate(nil)
         }
-    }
-
-    // MARK: - 更多操作二级原生菜单
-
-    private func showMoreMenu() {
-        guard let view = popover.contentViewController?.view else { return }
-        let menu = NSMenu(title: "更多操作")
-
-        // 1. 开机自动启动
-        let autoStartItem = NSMenuItem(title: "开机自动启动", action: #selector(toggleAutoStartClicked(_:)), keyEquivalent: "")
-        autoStartItem.target = self
-        autoStartItem.state = isLaunchAtLoginEnabled() ? .on : .off
-        autoStartItem.image = NSImage(systemSymbolName: "power.circle", accessibilityDescription: nil)
-        menu.addItem(autoStartItem)
-
-        menu.addItem(.separator())
-
-        // 2. 清理翻译缓存
-        let storageInfo = CacheStorageManager.shared.refreshUsage()
-        let cacheItem = NSMenuItem(
-            title: "清理翻译缓存（\(storageInfo.formattedTotalSize)）",
-            action: #selector(clearCacheClicked(_:)),
-            keyEquivalent: ""
-        )
-        cacheItem.target = self
-        cacheItem.image = NSImage(systemSymbolName: "trash", accessibilityDescription: nil)
-        menu.addItem(cacheItem)
-
-        // 3. 重新加载全局快捷键
-        let reloadHotkeyItem = NSMenuItem(
-            title: "重新加载全局快捷键",
-            action: #selector(reloadHotkeyClicked(_:)),
-            keyEquivalent: ""
-        )
-        reloadHotkeyItem.target = self
-        reloadHotkeyItem.image = NSImage(systemSymbolName: "keyboard", accessibilityDescription: nil)
-        menu.addItem(reloadHotkeyItem)
-
-        // 4. 重新启动译栏
-        let restartItem = NSMenuItem(
-            title: "重新启动译栏",
-            action: #selector(restartAppClicked(_:)),
-            keyEquivalent: ""
-        )
-        restartItem.target = self
-        restartItem.image = NSImage(systemSymbolName: "arrow.clockwise", accessibilityDescription: nil)
-        menu.addItem(restartItem)
-
-        menu.addItem(.separator())
-
-        // 5. 检查更新与更新记录
-        let updateTitle = AppSettings.shared.hasNewUpdateAvailable ? "发现新版本…" : "检查更新…"
-        let checkUpdateItem = NSMenuItem(title: updateTitle, action: #selector(checkUpdatesClicked(_:)), keyEquivalent: "")
-        checkUpdateItem.target = self
-        checkUpdateItem.image = NSImage(systemSymbolName: "arrow.down.circle", accessibilityDescription: nil)
-        menu.addItem(checkUpdateItem)
-
-        let releaseNotesItem = NSMenuItem(title: "更新记录…", action: #selector(releaseNotesClicked(_:)), keyEquivalent: "")
-        releaseNotesItem.target = self
-        releaseNotesItem.image = NSImage(systemSymbolName: "clock.arrow.circlepath", accessibilityDescription: nil)
-        menu.addItem(releaseNotesItem)
-
-        moreMenu = menu
-        menu.autoenablesItems = false
-        menu.popUp(positioning: nil, at: NSPoint(x: 18, y: 36), in: view)
-        moreMenu = nil
-    }
-
-    @objc private func toggleAutoStartClicked(_ sender: NSMenuItem) {
-        if #available(macOS 13.0, *) {
-            let service = SMAppService.mainApp
-            if service.status == .enabled {
-                try? service.unregister()
-            } else {
-                try? service.register()
-            }
-        }
-        refresh()
-    }
-
-    @objc private func clearCacheClicked(_ sender: NSMenuItem) {
-        AppDelegate.shared?.cleanupSpaceAction()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-            self?.refresh()
-        }
-    }
-
-    @objc private func reloadHotkeyClicked(_ sender: NSMenuItem) {
-        AppDelegate.shared?.reloadHotkeyAction()
-        refresh()
-    }
-
-    @objc private func restartAppClicked(_ sender: NSMenuItem) {
-        AppDelegate.shared?.restartAppAction()
-    }
-
-    @objc private func checkUpdatesClicked(_ sender: NSMenuItem) {
-        close()
-        AppDelegate.shared?.openUpdateAction()
-    }
-
-    @objc private func releaseNotesClicked(_ sender: NSMenuItem) {
-        close()
-        AppDelegate.shared?.openSettings(tab: 7)
     }
 
     private func isLaunchAtLoginEnabled() -> Bool {
@@ -324,10 +255,10 @@ public final class StatusPanelController: NSObject, NSPopoverDelegate {
         RunLoop.main.add(timer, forMode: .common)
         refreshTimer = timer
 
-        // 键盘监听：Esc 关闭、⌘, 打开设置、⌥E 切换引擎、⌥M 记忆库、⌥S 统计、Tab / 箭头遍历
+        // 键盘监听：Esc 关闭/收起、⌘, 打开设置、⌥E 切换引擎、⌥M 记忆库、⌥S 统计、Tab / 箭头遍历
         keyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
             guard let self = self else { return event }
-            guard self.popover.isShown, self.moreMenu == nil,
+            guard self.popover.isShown,
                   event.window === self.popover.contentViewController?.view.window else {
                 return event
             }
@@ -345,18 +276,30 @@ public final class StatusPanelController: NSObject, NSPopoverDelegate {
     }
 
     private var focusOrder: [StatusPanelAction] {
-        [
-            .settings,
-            .quickTranslate,
-            .openTranslatePanel,
-            .switchEngine,
-            .personalMemory,
-            .usageStatistics,
-            .accessibilityPerm,
-            .agentGateway,
-            .more,
-            .quit
-        ]
+        if model.isMoreExpanded {
+            return [
+                .settings,
+                .toggleAutoStart,
+                .reloadHotkeys,
+                .restartApp,
+                .clearCache,
+                .checkUpdates,
+                .releaseNotes,
+                .more,
+                .quit
+            ]
+        } else {
+            return [
+                .settings,
+                .quickTranslate,
+                .openTranslatePanel,
+                .switchEngine,
+                .personalMemory,
+                .usageStatistics,
+                .more,
+                .quit
+            ]
+        }
     }
 
     private func handleKey(_ event: NSEvent) -> Bool {
@@ -386,8 +329,14 @@ public final class StatusPanelController: NSObject, NSPopoverDelegate {
             return true
         }
 
-        // Esc 键关闭
+        // Esc 键：优先收起更多展开面板，未展开时关闭浮窗
         if event.keyCode == 53 {
+            if model.isMoreExpanded {
+                withAnimation(.spring(response: 0.24, dampingFraction: 0.86)) {
+                    model.isMoreExpanded = false
+                }
+                return true
+            }
             close()
             return true
         }

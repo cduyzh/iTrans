@@ -21,7 +21,7 @@ func main() async {
 func handleCommandLineMode(args: [String]) async {
     if args.contains("--help") || args.contains("-h") {
         print("""
-        译栏 TransBar - macOS 智能翻译工具 CLI & GUI
+        极译 AI · MacTranslate AI (iTrans) - macOS 智能翻译工具 CLI & GUI
         
         用法:
           cduyzhTranslator                           以状态栏图形界面启动
@@ -54,7 +54,7 @@ func handleCommandLineMode(args: [String]) async {
         let result = await AppUpdateChecker.shared.checkForUpdates(isManual: true)
         switch result {
         case .upToDate(let curr):
-            print("✅ 当前已是最新版本: v\(curr.description) (Build \(curr.buildNumber ?? 1))")
+            print("✅ 当前已是最新版本: v\(curr.description)")
         case .updateAvailable(let latest, let curr, let note, let download):
             print("🚀 发现新版本: v\(latest.description) (当前版本: v\(curr.description))")
             if let n = note {

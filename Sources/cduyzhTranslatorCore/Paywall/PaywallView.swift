@@ -98,7 +98,7 @@ public struct PaywallView: View {
             HStack(spacing: 8) {
                 Image(systemName: "sparkles")
                     .foregroundColor(colorScheme == .dark ? Color(red: 0.30, green: 0.65, blue: 1.0) : Color(red: 0.0, green: 0.45, blue: 0.90))
-                Text("TransBar Pro")
+                Text("iTrans Pro")
                     .font(.system(size: 13, weight: .bold))
                 Text("· 商业许可")
                     .font(.system(size: 12))
@@ -143,7 +143,7 @@ public struct PaywallView: View {
                     .foregroundColor(.white)
             }
 
-            Text("升级 TransBar Pro")
+            Text("升级 iTrans Pro")
                 .font(.system(size: 20, weight: .bold))
 
             Text("解锁翻译历史无上限存储，畅享 AI Agent 智能词条构建与全场景特权")
@@ -411,7 +411,7 @@ public struct PaywallView: View {
                         .buttonStyle(.plain)
                         .disabled(isSandboxProcessing || activeOrderNo == nil)
 
-                        Text("无需掏真金白银，直接向云端中台调用 mock-complete，签发 TransBar 官方 Ed25519 验签许可并完成激活。")
+                        Text("无需掏真金白银，直接向云端中台调用 mock-complete，签发 iTrans 官方 Ed25519 验签许可并完成激活。")
                             .font(.system(size: 9.5))
                             .foregroundColor(.secondary)
                     }
@@ -572,7 +572,7 @@ public struct PaywallView: View {
                 Text("手动激活许可证")
                     .font(.system(size: 14, weight: .bold))
 
-                Text("请输入由 cduyzh 官方签发的 TransBar 许可证代码")
+                Text("请输入由 cduyzh 官方签发的 iTrans 许可证代码")
                     .font(.system(size: 11))
                     .foregroundColor(.secondary)
 
@@ -627,7 +627,7 @@ public struct PaywallView: View {
                 Text("登录 cduyzh 账户")
                     .font(.system(size: 14, weight: .bold))
 
-                Text("输入邮箱接收 6 位验证码，登录后自动同步 TransBar 许可证")
+                Text("输入邮箱接收 6 位验证码，登录后自动同步 iTrans 许可证")
                     .font(.system(size: 11))
                     .foregroundColor(.secondary)
 

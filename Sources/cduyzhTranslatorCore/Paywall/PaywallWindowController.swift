@@ -33,7 +33,7 @@ public final class PaywallWindowController: NSObject, NSWindowDelegate {
             defer: false
         )
 
-        newWindow.title = "TransBar Pro 商业许可"
+        newWindow.title = "iTrans Pro 商业许可"
         newWindow.titlebarAppearsTransparent = true
         newWindow.titleVisibility = .hidden
         newWindow.isMovableByWindowBackground = true

@@ -18,9 +18,6 @@ public struct AppVersion: Comparable, Equatable, Hashable, CustomStringConvertib
     }
 
     public var fullDisplayString: String {
-        if let build = buildNumber, build > 0 {
-            return "v\(description) (Build \(build))"
-        }
         return "v\(description)"
     }
 
@@ -113,6 +110,6 @@ public struct AppVersion: Comparable, Equatable, Hashable, CustomStringConvertib
 
     public static var appName: String {
         let info = Bundle.main.infoDictionary
-        return (info?["CFBundleDisplayName"] as? String) ?? (info?["CFBundleName"] as? String) ?? "译栏 TransBar"
+        return (info?["CFBundleDisplayName"] as? String) ?? (info?["CFBundleName"] as? String) ?? "极译 AI iTrans"
     }
 }

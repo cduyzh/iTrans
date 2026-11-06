@@ -290,10 +290,6 @@ public struct VersionUpdateView: View {
                 }
 
                 Spacer()
-
-                Text("Build \(release.buildNumber)")
-                    .font(.system(size: 11, design: .monospaced))
-                    .foregroundStyle(.tertiary)
             }
 
             // 一句话描述更新内容

@@ -258,9 +258,9 @@ public struct SettingsView: View {
             }
             Spacer()
             VStack(alignment: .leading, spacing: 3) {
-                Text("译栏")
+                Text("极译 AI")
                     .font(.system(size: 11, weight: .medium))
-                Text("本机设置")
+                Text("iTrans 本机设置")
                     .font(.system(size: 10))
                     .foregroundStyle(TransBarInspectorDesign.secondaryText(for: colorScheme).opacity(0.7))
             }
@@ -293,12 +293,12 @@ public struct SettingsView: View {
             .clipShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
             .accessibilityHidden(true)
 
-            Text("译栏")
+            Text("极译 AI")
                 .font(.system(size: 17, weight: .semibold))
                 .foregroundStyle(colorScheme == .dark ? Color.white.opacity(0.96) : Color(red: 0.12, green: 0.22, blue: 0.34))
         }
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("译栏")
+        .accessibilityLabel("极译 AI (iTrans)")
     }
 
     // MARK: - 模型与 API
@@ -650,7 +650,7 @@ public struct SettingsView: View {
         ScrollView(.vertical) {
             VStack(alignment: .leading, spacing: 16) {
                 settingsSection("全局快捷键") {
-                    Toggle("使用快捷键唤起译栏", isOn: $settings.hotkeyEnabled)
+                    Toggle("使用快捷键唤起极译 AI", isOn: $settings.hotkeyEnabled)
                         .toggleStyle(.switch)
                         .onChange(of: settings.hotkeyEnabled) { enabled in
                             if enabled { hotkeyManager.startMonitoring(requestPermission: true) }
@@ -687,7 +687,7 @@ public struct SettingsView: View {
                                         .buttonStyle(TransBarInspectorButtonStyle(variant: .outline, size: .small))
                                     }
                                 }
-                                caption("在“隐私与安全性 → 辅助功能”中勾选译栏后返回这里点击“重新检测”。如果原本已勾选但仍提示授权，请先取消勾选再重新勾选。⌥Z / ⌃Z 始终无需该权限。")
+                                caption("在“隐私与安全性 → 辅助功能”中勾选 iTrans 后返回这里点击“重新检测”。如果原本已勾选但仍提示授权，请先取消勾选再重新勾选。⌥Z / ⌃Z 始终无需该权限。")
                             }
                         }
                     }
@@ -695,7 +695,7 @@ public struct SettingsView: View {
                 settingsSection("划词翻译") {
                     Toggle("选中文字后显示翻译按钮", isOn: $settings.selectionTranslationEnabled)
                         .toggleStyle(.switch)
-                    caption("在其他应用中选中文字后，译栏会显示翻译按钮。点击按钮才会把选中文字发送给当前翻译引擎。")
+                    caption("在其他应用中选中文字后，极译 AI 会显示翻译按钮。点击按钮才会把选中文字发送给当前翻译引擎。")
                     caption("需要 macOS 辅助功能权限；可随时关闭此功能。")
                     if settings.selectionTranslationEnabled {
                         if hotkeyManager.hasAccessibilityPermission {
@@ -928,7 +928,7 @@ public struct SettingsView: View {
                 .frame(width: 46, height: 46)
                 .background(TransBarInspectorDesign.accent(for: colorScheme).opacity(0.1), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
             VStack(alignment: .leading, spacing: 5) {
-                Text("把译栏接入你的 Agent 工作流")
+                Text("把极译 AI (iTrans) 接入你的 Agent 工作流")
                     .font(.system(size: 15, weight: .semibold))
                 caption("供 Cursor、Claude Desktop、终端和其他本地工具调用翻译与术语上下文。")
                 if !agentServer.isRunning {

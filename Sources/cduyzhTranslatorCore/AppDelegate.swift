@@ -103,13 +103,13 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
         // 1. 应用菜单
         let appMenuItem = NSMenuItem()
         let appMenu = NSMenu()
-        appMenu.addItem(withTitle: "关于 译栏 TransBar", action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: "")
+        appMenu.addItem(withTitle: "关于 极译 AI (iTrans)", action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: "")
         appMenu.addItem(withTitle: "检查更新与更新日志...", action: #selector(openUpdateAction), keyEquivalent: "u")
         appMenu.addItem(NSMenuItem.separator())
-        appMenu.addItem(withTitle: "隐藏 译栏 TransBar", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
+        appMenu.addItem(withTitle: "隐藏 极译 AI (iTrans)", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
         appMenu.addItem(withTitle: "隐藏其他", action: #selector(NSApplication.hideOtherApplications(_:)), keyEquivalent: "h")
         appMenu.addItem(NSMenuItem.separator())
-        appMenu.addItem(withTitle: "退出 译栏 TransBar", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        appMenu.addItem(withTitle: "退出 极译 AI (iTrans)", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         appMenuItem.submenu = appMenu
         mainMenu.addItem(appMenuItem)
 
@@ -144,8 +144,8 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
 
         // 使用专属自适应 Template 矢量图标
         button.image = StatusBarIconFactory.makeTemplateIcon()
-        button.setAccessibilityLabel("译栏：翻译面板与状态")
-        button.toolTip = "译栏 TransBar (左键翻译 · 右键状态)"
+        button.setAccessibilityLabel("极译 AI：翻译面板与状态")
+        button.toolTip = "极译 AI iTrans (左键翻译 · 右键状态)"
         button.action = #selector(handleStatusItemClick)
         button.target = self
         button.sendAction(on: [.leftMouseUp, .rightMouseUp])

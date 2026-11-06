@@ -96,8 +96,8 @@ public struct MainTranslateView: View {
         HStack(spacing: 10) {
             appIcon
             VStack(alignment: .leading, spacing: 2) {
-                Text("译栏").font(.system(size: 17, weight: .semibold))
-                Text("CDUYZH TRANSLATE")
+                Text("极译 AI").font(.system(size: 17, weight: .semibold))
+                Text("MACTRANSLATE AI")
                     .font(.system(size: 9, weight: .medium))
                     .tracking(1.2)
                     .foregroundStyle(.secondary)

@@ -57,9 +57,13 @@ final class StatusPanelTests: XCTestCase {
     func testStatusPanelModelUpdatesSnapshotAndFocusedAction() {
         let model = StatusPanelModel()
         XCTAssertNil(model.focusedAction)
+        XCTAssertFalse(model.isMoreExpanded)
 
         model.focusedAction = .quickTranslate
         XCTAssertEqual(model.focusedAction, .quickTranslate)
+
+        model.isMoreExpanded = true
+        XCTAssertTrue(model.isMoreExpanded)
 
         var newSnapshot = StatusPanelSnapshot.preview
         newSnapshot.memoryCount = 99
@@ -70,6 +74,7 @@ final class StatusPanelTests: XCTestCase {
     func testStatusPanelViewCanBeRenderedInHostingController() {
         let view = StatusPanelView(
             snapshot: .preview,
+            isMoreExpanded: false,
             focusedAction: .quickTranslate,
             onAction: { _ in },
             onFocusChange: { _ in }
@@ -77,6 +82,30 @@ final class StatusPanelTests: XCTestCase {
         let controller = NSHostingController(rootView: view)
         XCTAssertNotNil(controller.view)
         XCTAssertEqual(controller.view.fittingSize.width, 368, accuracy: 2.0)
+
+        // 验证展开“更多”面板时的渲染
+        let expandedView = StatusPanelView(
+            snapshot: .preview,
+            isMoreExpanded: true,
+            focusedAction: .toggleAutoStart,
+            onAction: { _ in },
+            onFocusChange: { _ in }
+        )
+        let expandedController = NSHostingController(rootView: expandedView)
+        XCTAssertNotNil(expandedController.view)
+        XCTAssertEqual(expandedController.view.fittingSize.width, 368, accuracy: 2.0)
+    }
+
+    func testStatusPanelActionSecondaryCases() {
+        let actions: [StatusPanelAction] = [
+            .toggleAutoStart,
+            .clearCache,
+            .reloadHotkeys,
+            .restartApp,
+            .checkUpdates,
+            .releaseNotes
+        ]
+        XCTAssertEqual(actions.count, 6)
     }
 
     func testStatusPanelControllerRefresh() {

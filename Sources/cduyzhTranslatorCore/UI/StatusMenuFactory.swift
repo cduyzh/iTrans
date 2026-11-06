@@ -26,11 +26,11 @@ enum StatusMenuFactory {
         let submenu = NSMenu()
         submenu.addItem(item("按保留策略清理缓存", "externaldrive", #selector(AppDelegate.cleanupSpaceAction)))
         submenu.addItem(item("重新加载快捷键", "keyboard", #selector(AppDelegate.reloadHotkeyAction)))
-        submenu.addItem(item("重新启动译栏", "arrow.clockwise", #selector(AppDelegate.restartAppAction)))
+        submenu.addItem(item("重新启动极译 AI", "arrow.clockwise", #selector(AppDelegate.restartAppAction)))
         maintenance.submenu = submenu
         menu.addItem(maintenance)
         menu.addItem(.separator())
-        menu.addItem(item("退出译栏", "power", #selector(AppDelegate.quitAppAction), "q"))
+        menu.addItem(item("退出极译 AI", "power", #selector(AppDelegate.quitAppAction), "q"))
         return menu
     }
 }
@@ -42,7 +42,7 @@ private final class StatusMenuHeader: NSView {
         icon.image = StatusBarIconFactory.makeTemplateIcon()
         icon.contentTintColor = .labelColor
         addSubview(icon)
-        let title = NSTextField(labelWithString: "译栏")
+        let title = NSTextField(labelWithString: "极译 AI")
         title.font = .systemFont(ofSize: 14, weight: .semibold)
         title.textColor = .labelColor
         title.frame = NSRect(x: 56, y: 35, width: 196, height: 20)
@@ -53,7 +53,7 @@ private final class StatusMenuHeader: NSView {
         subtitle.frame = NSRect(x: 56, y: 15, width: 202, height: 16)
         addSubview(subtitle)
         setAccessibilityElement(true)
-        setAccessibilityLabel("译栏，\(engineName)。按住 Command 连按两次 C 自动翻译；点击图标打开面板。")
+        setAccessibilityLabel("极译 AI (iTrans)，\(engineName)。按住 Command 连按两次 C 自动翻译；点击图标打开面板。")
     }
     required init?(coder: NSCoder) { nil }
 }

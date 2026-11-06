@@ -9,7 +9,7 @@ final class StatusMenuTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(menu.minimumWidth, 260)
         XCTAssertNotNil(menu.items.first?.view)
         let actions = menu.items.filter { !$0.isSeparatorItem && $0.view == nil }
-        XCTAssertEqual(actions.map(\.title), ["打开翻译面板", "设置…", "检查更新…", "维护", "退出译栏"])
+        XCTAssertEqual(actions.map(\.title), ["打开翻译面板", "设置…", "检查更新…", "维护", "退出极译 AI"])
         XCTAssertEqual(actions.first?.action, #selector(AppDelegate.openPanelAction))
         XCTAssertTrue(actions.allSatisfy { $0.image != nil })
         XCTAssertEqual(actions.first(where: { $0.title == "维护" })?.submenu?.items.count, 3)
