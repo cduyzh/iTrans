@@ -84,8 +84,8 @@ public final class StatusPanelController: NSObject, NSPopoverDelegate {
 
         // 版本与构建号
         let bundle = Bundle.main
-        let ver = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.2.0"
-        let bld = (bundle.object(forInfoDictionaryKey: "CFBundleVersion") as? String).flatMap { Int($0) } ?? 9
+        let ver = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0.0"
+        let bld = (bundle.object(forInfoDictionaryKey: "CFBundleVersion") as? String).flatMap { Int($0) } ?? 1
         state.version = ver
         state.build = bld
 

@@ -105,6 +105,9 @@ fi
 if [ -f "Resources/version_manifest.json" ]; then
     cp "Resources/version_manifest.json" "$RESOURCES_DIR/version_manifest.json"
 fi
+if [ -f "Resources/ReleaseHistory.json" ]; then
+    cp "Resources/ReleaseHistory.json" "$RESOURCES_DIR/ReleaseHistory.json"
+fi
 
 # Ad-hoc 代码签名
 DESIGNATED_REQUIREMENT='=designated => identifier "com.cduyzh.translator"'

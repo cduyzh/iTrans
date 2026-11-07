@@ -23,6 +23,7 @@ BUNDLE_FILES = {
     "Contents/Resources/AppIcon.icns",
     "Contents/Resources/AppIcon_1024.png",
     "Contents/Resources/version_manifest.json",
+    "Contents/Resources/ReleaseHistory.json",
     "Contents/_CodeSignature/CodeResources",
 }
 

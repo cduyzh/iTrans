@@ -515,6 +515,18 @@ public final class AgentGatewayServer: ObservableObject {
                             "summary": note?.summary ?? "",
                             "download_url": download?.absoluteString ?? ""
                         ]
+                    case .noRelease:
+                        respDict = [
+                            "status": "no_release",
+                            "has_update": false,
+                            "message": "暂无已发布的正式版本"
+                        ]
+                    case .rateLimited(let msg):
+                        respDict = [
+                            "status": "rate_limited",
+                            "has_update": false,
+                            "error": msg
+                        ]
                     case .failed(let err):
                         respDict = [
                             "status": "error",

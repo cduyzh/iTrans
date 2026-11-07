@@ -46,9 +46,9 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
             CacheStorageManager.shared.performAutoCleanupIfNeeded()
         }
 
-        // 7. 启动时执行版本更新检测 (若用户启用了自动检查)
+        // 7. 启动时开启后台周期性版本更新检测与 Mac 唤醒静默自检
         Task { @MainActor in
-            AppUpdateChecker.shared.performAutoCheckIfNeeded()
+            AppUpdateChecker.shared.startPeriodicCheck()
         }
 
         // 8. 注册面板操作广播 (一键关闭、一键重启等)
@@ -459,7 +459,10 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     public func applicationWillTerminate(_ notification: Notification) {
-        MainActor.assumeIsolated { SelectionTranslationManager.shared.stop() }
+        MainActor.assumeIsolated {
+            SelectionTranslationManager.shared.stop()
+            AppUpdateChecker.shared.stopPeriodicCheck()
+        }
         subscriptions.removeAll()
         NotificationCenter.default.removeObserver(self)
         GlobalHotkeyManager.shared.stopMonitoring()

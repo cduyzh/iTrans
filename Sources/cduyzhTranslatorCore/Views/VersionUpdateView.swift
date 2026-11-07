@@ -177,6 +177,27 @@ public struct VersionUpdateView: View {
                 .padding(.horizontal, 6)
                 .padding(.vertical, 2)
                 .background(Color.primary.opacity(0.05), in: Capsule())
+            } else if case .rateLimited(let msg) = updateChecker.checkResult {
+                HStack(spacing: 4) {
+                    Circle().fill(Color.orange).frame(width: 6, height: 6)
+                    Text("请求受限")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(Color.orange)
+                }
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
+                .background(Color.orange.opacity(0.12), in: Capsule())
+                .help(msg)
+            } else if case .noRelease = updateChecker.checkResult {
+                HStack(spacing: 4) {
+                    Circle().fill(Color.secondary).frame(width: 6, height: 6)
+                    Text("暂无正式版本")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
+                .background(Color.primary.opacity(0.05), in: Capsule())
             } else if updateChecker.errorMessage != nil {
                 Label("检查失败，可重试", systemImage: "exclamationmark.circle")
                     .font(.system(size: 11, weight: .medium))

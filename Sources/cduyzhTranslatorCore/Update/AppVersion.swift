@@ -102,10 +102,10 @@ public struct AppVersion: Comparable, Equatable, Hashable, CustomStringConvertib
     // MARK: - 当前应用版本信息
     public static var current: AppVersion {
         let info = Bundle.main.infoDictionary
-        let versionString = info?["CFBundleShortVersionString"] as? String ?? "1.1.0"
+        let versionString = info?["CFBundleShortVersionString"] as? String ?? "1.0.0"
         let buildStr = info?["CFBundleVersion"] as? String
-        let buildNum = buildStr.flatMap { Int($0) } ?? 3
-        return AppVersion(string: versionString, buildNumber: buildNum) ?? AppVersion(major: 1, minor: 1, patch: 0, buildNumber: buildNum)
+        let buildNum = buildStr.flatMap { Int($0) } ?? 1
+        return AppVersion(string: versionString, buildNumber: buildNum) ?? AppVersion(major: 1, minor: 0, patch: 0, buildNumber: buildNum)
     }
 
     public static var appName: String {

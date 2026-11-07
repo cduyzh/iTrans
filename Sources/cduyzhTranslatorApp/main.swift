@@ -72,6 +72,10 @@ func handleCommandLineMode(args: [String]) async {
             if let dl = download {
                 print("【下载链接】: \(dl.absoluteString)")
             }
+        case .noRelease:
+            print("ℹ️ 暂无已发布的正式版本。")
+        case .rateLimited(let msg):
+            print("⚠️ GitHub API 请求频次受限: \(msg)")
         case .failed(let err):
             print("❌ 检查更新失败: \(err)")
         }

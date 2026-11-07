@@ -23,8 +23,8 @@ public struct StatusPanelSnapshot: Equatable, Sendable {
     public var cacheSizeFormatted: String = "0 KB"
 
     public init(
-        version: String = "1.2.1",
-        build: Int = 10,
+        version: String = "1.0.0",
+        build: Int = 1,
         isAccessibilityGranted: Bool = false,
         isHotkeyMonitoring: Bool = true,
         engineName: String = "DeepSeek",

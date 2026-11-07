@@ -151,6 +151,114 @@ final class AppUpdateTests: XCTestCase {
         }
     }
 
+    // MARK: - GitHub Release 响应模型解析与评估测试
+    @MainActor
+    func testEvaluateGitHubRelease() {
+        let checker = AppUpdateChecker.shared
+        let currentVer = AppVersion(string: "1.0.0", buildNumber: 1)!
+
+        // 1. 发现 GitHub 新版本
+        let newerRelease = GitHubReleaseResponse(
+            tagName: "v1.0.1",
+            name: "iTrans v1.0.1 体验升级",
+            body: "修复状态栏悬浮面板动画轻微抖动问题",
+            htmlUrl: "https://github.com/cduyzh/iTrans/releases/tag/v1.0.1",
+            publishedAt: "2026-11-08T08:00:00Z",
+            assets: [
+                GitHubReleaseAsset(name: "iTrans-1.0.1.dmg", browserDownloadUrl: "https://github.com/cduyzh/iTrans/releases/download/v1.0.1/iTrans-1.0.1.dmg")
+            ]
+        )
+
+        let result1 = checker.evaluateGitHubRelease(newerRelease, currentVer: currentVer)
+        XCTAssertTrue(result1.isUpdateAvailable)
+        if case .updateAvailable(let latest, let curr, let note, let url) = result1 {
+            XCTAssertEqual(latest.description, "1.0.1")
+            XCTAssertEqual(curr.description, "1.0.0")
+            XCTAssertEqual(note?.title, "iTrans v1.0.1 体验升级")
+            XCTAssertEqual(url?.absoluteString, "https://github.com/cduyzh/iTrans/releases/download/v1.0.1/iTrans-1.0.1.dmg")
+        } else {
+            XCTFail("应返回 updateAvailable")
+        }
+
+        // 2. 当前版本即最新版
+        let sameRelease = GitHubReleaseResponse(
+            tagName: "v1.0.0",
+            name: "iTrans v1.0.0 正式发布",
+            body: "首发版",
+            htmlUrl: "https://github.com/cduyzh/iTrans/releases/tag/v1.0.0"
+        )
+        let result2 = checker.evaluateGitHubRelease(sameRelease, currentVer: currentVer)
+        XCTAssertFalse(result2.isUpdateAvailable)
+        if case .upToDate(let curr) = result2 {
+            XCTAssertEqual(curr.description, "1.0.0")
+        } else {
+            XCTFail("应返回 upToDate")
+        }
+    }
+
+    // MARK: - UpdateCheckResult 状态与描述完整性测试
+    func testUpdateCheckResultStates() {
+        let curr = AppVersion(string: "1.0.0")!
+        let latest = AppVersion(string: "1.1.0")!
+
+        let r1 = UpdateCheckResult.upToDate(currentVersion: curr)
+        XCTAssertFalse(r1.isUpdateAvailable)
+        XCTAssertTrue(r1.statusDescription.contains("当前已是最新版本"))
+
+        let r2 = UpdateCheckResult.updateAvailable(latest: latest, current: curr, releaseNote: nil, downloadUrl: nil)
+        XCTAssertTrue(r2.isUpdateAvailable)
+        XCTAssertTrue(r2.statusDescription.contains("发现新版本"))
+
+        let r3 = UpdateCheckResult.noRelease
+        XCTAssertFalse(r3.isUpdateAvailable)
+        XCTAssertEqual(r3.statusDescription, "暂无已发布的正式版本")
+
+        let r4 = UpdateCheckResult.rateLimited(message: "HTTP 403")
+        XCTAssertFalse(r4.isUpdateAvailable)
+        XCTAssertTrue(r4.statusDescription.contains("GitHub API 请求频率受限"))
+
+        let r5 = UpdateCheckResult.failed(error: "超时")
+        XCTAssertFalse(r5.isUpdateAvailable)
+        XCTAssertTrue(r5.statusDescription.contains("检查更新失败: 超时"))
+    }
+
+    // MARK: - ReleaseHistory.json 与 Info.plist 版本号真值门禁校验
+    func testReleaseHistoryMatchesInfoPlist() throws {
+        let rhUrl = URL(fileURLWithPath: "Resources/ReleaseHistory.json")
+        let rhData = try Data(contentsOf: rhUrl)
+        let json = try JSONSerialization.jsonObject(with: rhData) as? [String: Any]
+        let releases = json?["releases"] as? [[String: Any]]
+        XCTAssertNotNil(releases)
+        XCTAssertFalse(releases?.isEmpty ?? true)
+
+        let firstRelease = releases?[0]
+        let rhVer = firstRelease?["version"] as? String
+        let rhBuild = firstRelease?["build"] as? Int
+
+        XCTAssertEqual(rhVer, "1.0.0")
+        XCTAssertEqual(rhBuild, 1)
+
+        // 校验 Info.plist
+        let infoUrl = URL(fileURLWithPath: "Info.plist")
+        let infoData = try Data(contentsOf: infoUrl)
+        let info = try PropertyListSerialization.propertyList(from: infoData, options: [], format: nil) as? [String: Any]
+        let plistVer = info?["CFBundleShortVersionString"] as? String
+        let plistBuild = (info?["CFBundleVersion"] as? String).flatMap { Int($0) }
+
+        XCTAssertEqual(plistVer, rhVer, "ReleaseHistory.json 版本必须与 Info.plist 保持一致")
+        XCTAssertEqual(plistBuild, rhBuild, "ReleaseHistory.json 构建号必须与 Info.plist 保持一致")
+    }
+
+    // MARK: - 自动周期检查调度器生命周期测试
+    @MainActor
+    func testPeriodicCheckScheduler() {
+        let checker = AppUpdateChecker.shared
+        checker.startPeriodicCheck()
+        // 确保不会崩溃并且可以安全多次调用
+        checker.startPeriodicCheck()
+        checker.stopPeriodicCheck()
+    }
+
     // MARK: - 网关接口测试 (/v1/version & /v1/changelog)
     func testGatewayVersionEndpoints() async throws {
         let server = AgentGatewayServer.shared

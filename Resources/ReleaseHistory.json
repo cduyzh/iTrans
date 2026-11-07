@@ -1,0 +1,36 @@
+{
+  "releases": [
+    {
+      "version": "1.0.0",
+      "build": 1,
+      "releaseDate": "2026-11-06",
+      "title": "极译 AI (iTrans) 官方正式版发布",
+      "summary": "专为 macOS 打造的原生极速划词翻译与 AI 深度思考工具，深度集成 Google 与 DeepSeek 双引擎，支持网络俚语深度释义与本地自学习记忆库。",
+      "highlights": [
+        "macOS 原生轻量架构，纯 Swift/SwiftUI 开发，内存占用仅约 25MB，启动低于 200ms。",
+        "Google Web RPC 与 DeepSeek 大模型双引擎支持，自带 Key 官方直连，告别月租订阅。",
+        "突破传统机翻瓶颈：支持网络俚语（如 wtf）与缩写语境深度释义，自动解析语气、用法与地道表达。",
+        "全局 Command+C+C 双击即选即译与 Option+Z 快捷键，无缝嵌入 Safari、Xcode 与各类阅读器。",
+        "纯原生 SwiftUI 毛玻璃卡片悬浮状态控制面板，支持开机启动、一键缓存释放与状态自检。"
+      ],
+      "changes": {
+        "new": [
+          "Google 免费 RPC 与 DeepSeek 双引擎快速切换（Option+E）",
+          "网络俚语/缩写语境释义模式与反思模型思考过程展开",
+          "全局 Command+C+C 双击与 Option+Z 划词秒翻",
+          "本地自学习个人翻译记忆库与专业知识库管理",
+          "原生 SwiftUI 二级更多功能抽屉与开机自启动微开关",
+          "本地 Agent Gateway (127.0.0.1:11899) 与 CLI 接口"
+        ],
+        "improvements": [
+          "优化状态栏悬浮面板层级与交互动效，提供沉浸式 Native 视觉体验",
+          "纯原生 SwiftUI + AppKit 架构，启动速度低于 200ms",
+          "API Key 与配置以 0600 权限保存在本机受保护目录，本地优先且零云端追踪"
+        ],
+        "fixes": [
+          "首发版本正式发布并通过全部单元测试与安全合规门禁"
+        ]
+      }
+    }
+  ]
+}
