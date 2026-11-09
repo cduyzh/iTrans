@@ -14,7 +14,16 @@
 [![AI Engine: DeepSeek V4.1 Flash](https://img.shields.io/badge/AI%20Engine-DeepSeek%20V4.1%20Flash-38bdf8?style=flat-square)](https://api-docs.deepseek.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald?style=flat-square)](LICENSE)
 
-[Official Website](https://apps.cduyzh.top/iTrans/zh.html) · [Download DMG](https://github.com/cduyzh/iTrans/releases) · [Watch Promo Video (MP4)](film.mp4) · [Documentation](https://apps.cduyzh.top/iTrans/zh.html#features) · [简体中文](README.zh-CN.md)
+[Official Website](https://apps.cduyzh.top/iTrans/zh.html) · [Download DMG](https://github.com/cduyzh/iTrans/releases) · [Watch Promo Film (MP4)](assets/itrans-promo.mp4) · [Documentation](https://apps.cduyzh.top/iTrans/zh.html#features) · [简体中文](README.zh-CN.md)
+
+<br/>
+
+<!-- Promo Film Poster -->
+<a href="assets/itrans-promo.mp4" title="Watch the iTrans promo film">
+  <img src="assets/itrans-promo-poster.png" width="560" alt="iTrans promo poster — click to watch the film" style="border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,0.45);" />
+</a>
+
+<p align="center"><i>▶ Click the poster to watch the 26-second promo film · 1080 × 1440 · MP4</i></p>
 
 <br/>
 

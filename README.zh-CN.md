@@ -14,7 +14,16 @@
 [![AI Engine: DeepSeek V4.1 Flash](https://img.shields.io/badge/AI%20Engine-DeepSeek%20V4.1%20Flash-38bdf8?style=flat-square)](https://api-docs.deepseek.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald?style=flat-square)](LICENSE)
 
-[产品官网](https://apps.cduyzh.top/iTrans/zh.html) · [立即下载 DMG](https://github.com/cduyzh/iTrans/releases) · [宣传视频 (MP4)](film.mp4) · [功能文档](https://apps.cduyzh.top/iTrans/zh.html#features) · [English](README.md)
+[产品官网](https://apps.cduyzh.top/iTrans/zh.html) · [立即下载 DMG](https://github.com/cduyzh/iTrans/releases) · [宣传视频 (MP4)](assets/itrans-promo.mp4) · [功能文档](https://apps.cduyzh.top/iTrans/zh.html#features) · [English](README.md)
+
+<br/>
+
+<!-- 宣传片海报 -->
+<a href="assets/itrans-promo.mp4" title="观看 iTrans 宣传片">
+  <img src="assets/itrans-promo-poster.png" width="560" alt="iTrans 宣传海报 · 点击观看宣传片" style="border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,0.45);" />
+</a>
+
+<p align="center"><i>▶ 点击海报观看 26 秒宣传片 · 1080 × 1440 · MP4</i></p>
 
 <br/>
 
